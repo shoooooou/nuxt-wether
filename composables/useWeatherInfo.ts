@@ -1,16 +1,19 @@
 import type { City } from "@/interface";
+
 export default function useWeatherInfo(city: City) {
+  const config = useRuntimeConfig();
   const asyncData = useLazyAsyncData(
     `useWeatherInfo-${city.id}`,
     (): Promise<any> => {
-      const weatherInfoUrl = "https://api.openweathermap.org/data/2.5/weather";
+      const weatherInfoUrl = config.public.weatherInfoUrl;
       const params: { lang: string; q: string; appid: string } = {
         lang: "ja",
         q: city.q,
-        appid: "c7ecfc76ab4439eecf7d37bbce808329",
+        appid: config.public.weathermapAppid,
       };
       const queryParams = new URLSearchParams(params);
       const urlFull = `${weatherInfoUrl}?${queryParams}`;
+      console.log(urlFull);
       const response = $fetch(urlFull);
       return response;
     },
